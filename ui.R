@@ -11,6 +11,8 @@ ui <- fluidPage(
   ),
   
   wellPanel(
+    
+    # Select country
     fluidRow(column(
       4,
       selectizeInput(
@@ -36,8 +38,22 @@ ui <- fluidPage(
           onInitialize = I('function() { this.setValue(""); }')
         )
       )
+    ),
+    column(
+      4,
+      selectizeInput(
+        inputId = 'query2_id',
+        # do not change name
+        label = 'Select third country:',
+        choices = NULL,
+        options = list(
+          placeholder = 'e.g. Italy',
+          onInitialize = I('function() { this.setValue(""); }')
+        )
+      )
     )),
     
+    # Select date
     fluidRow(column(
       4,
       p(
@@ -58,6 +74,7 @@ ui <- fluidPage(
         )
       )
     ),
+    
     column(
       4,
       p(
@@ -74,6 +91,27 @@ ui <- fluidPage(
         choices = NULL,
         options = list(
           placeholder = 'e.g. 2020-01-23',
+          onInitialize = I('function() { this.setValue(""); }')
+        )
+      )
+    ),
+    
+    column(
+      4,
+      p(
+        em(
+          "A milestone date in Italy is",
+          br(),
+          "2020-03-09: lockdown of Italy"
+        )
+      ),
+      selectizeInput(
+        inputId = 'query2_date',
+        # do not change name
+        label = 'Milestone date in third country:',
+        choices = NULL,
+        options = list(
+          placeholder = 'e.g. 2020-03-09',
           onInitialize = I('function() { this.setValue(""); }')
         )
       )

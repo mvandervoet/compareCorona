@@ -132,8 +132,8 @@ server <- function(input, output, session) {
       offset <-
         difftime(outbreakCurrentlockdown, outbreakPastlockdown, units = 'days') %>% as.numeric
       
-      datasubset[datasubset$GeoId == "CN", ] <-
-        mutate(datasubset[datasubset$GeoId == "CN", ], DateRep = (DateRep + lubridate::days(offset)))
+      datasubset[datasubset$GeoId == outbreakPast, ] <-
+        mutate(datasubset[datasubset$GeoId == outbreakPast, ], DateRep = (DateRep + lubridate::days(offset)))
       
       datasubset$Date <- as.Date(datasubset$DateRep)
       
