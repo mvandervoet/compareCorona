@@ -119,6 +119,10 @@ ui <- fluidPage(
       )
     ),
     
+    # Checkboxes
+    checkboxInput("check100k", "Correct for population size: show per 100k", FALSE),
+    checkboxInput("check7day", "Remove daily fluctuations, show 7-day moving average", FALSE),
+    
     # Compare_Button
     fluidRow(actionButton("goCompare", "Go!"))
   ),

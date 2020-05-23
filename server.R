@@ -108,6 +108,10 @@ server <- function(input, output, session) {
     input$query_date
     input$query2_date
     
+    # Check boxes
+    input$check100k
+    input$check7day
+    
     output$plotCompare <- renderPlot({
       req(input$ref_id)
       req(input$query_id)
@@ -189,18 +193,35 @@ server <- function(input, output, session) {
       
       # Process deaths, per 100k and moving average
       datasubset <- datasubset %>%
-        select(Country, dateRep, deaths, popData2018) %>%
-        # Group by Country
-        dplyr::group_by(Country) %>%
-        # Deaths/100k population
-        mutate(deaths100k = deaths / popData2018 * 100000) %>%
-        # Moving average
-        mutate(deathsRollmean = zoo::rollmean(deaths100k, k = 7, fill = NA))
+        select(Country, dateRep, deaths, popData2018)
+      
+      if(input$check100k & input$check7day) {
+        output <- datasubset %>%
+              dplyr::group_by(Country) %>%
+              # Deaths/100k population
+              mutate(deaths = deaths / popData2018 * 100000) %>%
+              # Moving average
+              mutate(deaths = zoo::rollmean(deaths, k = 7, fill = NA))
+      } else if (input$check100k) {
+        output <- datasubset %>%
+          dplyr::group_by(Country) %>%
+          # Deaths/100k population
+          mutate(deaths = deaths / popData2018 * 100000)
+      } else if (input$check7day) {
+        output <- datasubset %>%
+          dplyr::group_by(Country) %>%
+          # Moving average
+          mutate(deaths = zoo::rollmean(deaths, k = 7, fill = NA))
+      } else {
+        output <- datasubset
+      }
+      
+      
       
       plot <- ggpubr::ggline(
-        datasubset,
+        output,
         x = "dateRep",
-        y = "deathsRollmean",
+        y = "deaths",
         point.size = 0.1,
         #xscale = ,
         color = "Country",
@@ -218,7 +239,7 @@ server <- function(input, output, session) {
           timestamp,
           sep = ""
         ),
-        ylab = "\ndeaths/100k population/day \n7-day moving average\n"
+        ylab = "\ndeaths/day\n"
       )
       plot
       
