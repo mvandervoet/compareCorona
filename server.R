@@ -191,27 +191,27 @@ server <- function(input, output, session) {
       
       datasubset$Date <- as.Date(datasubset$dateRep)
       
-      # Process deaths, per 100k and moving average
+      # Process Corona metric, per 100k and moving average
       datasubset <- datasubset %>%
-        select(Country, dateRep, deaths, popData2018)
+        select(Country, dateRep, coronaMetric = input$metric, popData2018)
       
       if(input$check100k & input$check7day) {
         output <- datasubset %>%
               dplyr::group_by(Country) %>%
-              # Deaths/100k population
-              mutate(deaths = deaths / popData2018 * 100000) %>%
+              # coronaMetric/100k population
+              mutate(coronaMetric = coronaMetric / popData2018 * 100000) %>%
               # Moving average
-              mutate(deaths = zoo::rollmean(deaths, k = 7, fill = NA))
+              mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA))
       } else if (input$check100k) {
         output <- datasubset %>%
           dplyr::group_by(Country) %>%
-          # Deaths/100k population
-          mutate(deaths = deaths / popData2018 * 100000)
+          # coronaMetric/100k population
+          mutate(coronaMetric = coronaMetric / popData2018 * 100000)
       } else if (input$check7day) {
         output <- datasubset %>%
           dplyr::group_by(Country) %>%
           # Moving average
-          mutate(deaths = zoo::rollmean(deaths, k = 7, fill = NA))
+          mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA))
       } else {
         output <- datasubset
       }
@@ -221,7 +221,7 @@ server <- function(input, output, session) {
       plot <- ggpubr::ggline(
         output,
         x = "dateRep",
-        y = "deaths",
+        y = "coronaMetric",
         point.size = 0.1,
         #xscale = ,
         color = "Country",
@@ -239,7 +239,7 @@ server <- function(input, output, session) {
           timestamp,
           sep = ""
         ),
-        ylab = "\ndeaths/day\n"
+        ylab = paste0(input$metric, " / day\n")
       )
       plot
       
