@@ -193,20 +193,20 @@ server <- function(input, output, session) {
       
       # Process Corona metric, per 100k and moving average
       datasubset <- datasubset %>%
-        select(Country, dateRep, coronaMetric = input$metric, popData2018)
+        select(Country, dateRep, coronaMetric = input$metric, popData2019)
       
       if(input$check100k & input$check7day) {
         output <- datasubset %>%
               dplyr::group_by(Country) %>%
               # coronaMetric/100k population
-              mutate(coronaMetric = coronaMetric / popData2018 * 100000) %>%
+              mutate(coronaMetric = coronaMetric / popData2019 * 100000) %>%
               # Moving average
               mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA))
       } else if (input$check100k) {
         output <- datasubset %>%
           dplyr::group_by(Country) %>%
           # coronaMetric/100k population
-          mutate(coronaMetric = coronaMetric / popData2018 * 100000)
+          mutate(coronaMetric = coronaMetric / popData2019 * 100000)
       } else if (input$check7day) {
         output <- datasubset %>%
           dplyr::group_by(Country) %>%
