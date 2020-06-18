@@ -123,7 +123,9 @@ ui <- fluidPage(
     selectInput("metric", "Corona metric (deaths or cases)", c("deaths", "cases"), selected = "deaths", multiple = FALSE,
                 selectize = TRUE, width = "30%", size = NULL),
     
-    
+    checkboxInput("daily",
+                  "Show daily increase",
+                  TRUE),
     checkboxInput("check100k",
                   "Correct for population size: show per 100k",
                   TRUE),
