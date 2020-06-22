@@ -109,7 +109,7 @@ server <- function(input, output, session) {
     input$query2_date
     
     # Check boxes
-    input$daily
+    # input$daily
     input$check100k
     input$check7day
     
@@ -196,40 +196,44 @@ server <- function(input, output, session) {
       datasubset <- datasubset %>%
         select(Country, dateRep, coronaMetric = input$metric, popData2019)
       
-      if(input$check100k & input$check7day & input$daily) {
-        output <- datasubset %>%
-          dplyr::group_by(Country) %>%
-          # coronaMetric/100k population
-          mutate(coronaMetric = coronaMetric / popData2019 * 100000) %>%
-          # Moving average
-          mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA)) %>%
-          # Daily data
-          dplyr::arrange(dateRep, .by_group = TRUE) %>%
-          mutate(coronaMetric = coronaMetric - lag(coronaMetric))
-      } else if (input$check100k & input$check7day) {
+      # if(input$check100k & input$check7day & input$daily) {
+      #   output <- datasubset %>%
+      #     dplyr::group_by(Country) %>%
+      #     # coronaMetric/100k population
+      #     mutate(coronaMetric = coronaMetric / popData2019 * 100000) %>%
+      #     # Moving average
+      #     mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA)) %>%
+      #     # Daily data
+      #     dplyr::arrange(dateRep, .by_group = TRUE) %>%
+      #     mutate(coronaMetric = coronaMetric - lag(coronaMetric))
+      # } else
+        if (input$check100k & input$check7day) {
         output <- datasubset %>%
           dplyr::group_by(Country) %>%
           # coronaMetric/100k population
           mutate(coronaMetric = coronaMetric / popData2019 * 100000) %>%
           # Moving average
           mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA))
-      } else if (input$check7day & input$daily) {
-        output <- datasubset %>%
-          dplyr::group_by(Country) %>%
-          # Moving average
-          mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA)) %>%
-          # Daily data
-          dplyr::arrange(dateRep, .by_group = TRUE) %>%
-          mutate(coronaMetric = coronaMetric - lag(coronaMetric))
-      } else if (input$check100k & input$daily) {
-        output <- datasubset %>%
-          dplyr::group_by(Country) %>%
-          # coronaMetric/100k population
-          mutate(coronaMetric = coronaMetric / popData2019 * 100000) %>%
-          # Daily data
-          dplyr::arrange(dateRep, .by_group = TRUE) %>%
-          mutate(coronaMetric = coronaMetric - lag(coronaMetric))
-      } else if (input$check100k) {
+      } 
+      # else if (input$check7day & input$daily) {
+      #   output <- datasubset %>%
+      #     dplyr::group_by(Country) %>%
+      #     # Moving average
+      #     mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA)) %>%
+      #     # Daily data
+      #     dplyr::arrange(dateRep, .by_group = TRUE) %>%
+      #     mutate(coronaMetric = coronaMetric - lag(coronaMetric))
+      # } 
+      # else if (input$check100k & input$daily) {
+      #   output <- datasubset %>%
+      #     dplyr::group_by(Country) %>%
+      #     # coronaMetric/100k population
+      #     mutate(coronaMetric = coronaMetric / popData2019 * 100000) %>%
+      #     # Daily data
+      #     dplyr::arrange(dateRep, .by_group = TRUE) %>%
+      #     mutate(coronaMetric = coronaMetric - lag(coronaMetric))
+      # } 
+      else if (input$check100k) {
         output <- datasubset %>%
           dplyr::group_by(Country) %>%
           # coronaMetric/100k population
@@ -239,13 +243,15 @@ server <- function(input, output, session) {
           dplyr::group_by(Country) %>%
           # Moving average
           mutate(coronaMetric = zoo::rollmean(coronaMetric, k = 7, fill = NA))
-      } else if (input$daily) {
-        output <- datasubset %>%
-          dplyr::group_by(Country) %>%
-          # Daily data
-          dplyr::arrange(dateRep, .by_group = TRUE) %>%
-          mutate(coronaMetric = coronaMetric - lag(coronaMetric))
-      } else {
+      } 
+      # else if (input$daily) {
+      #   output <- datasubset %>%
+      #     dplyr::group_by(Country) %>%
+      #     # Daily data
+      #     dplyr::arrange(dateRep, .by_group = TRUE) %>%
+      #     mutate(coronaMetric = coronaMetric - lag(coronaMetric))
+      # } 
+      else {
         output <- datasubset
       }
       
@@ -275,9 +281,9 @@ server <- function(input, output, session) {
         ylab = paste0(input$metric, "\n") #  / day
       )
       plot <- plot + ggpubr::grids(axis = "y",
-                                   color = "#C0C0C0",
-                                   #size = 1,
-                                   linetype = "dotted")
+                           color = "#C0C0C0",
+                           #size = 1,
+                           linetype = "dotted")
       plot
       
     }, )
