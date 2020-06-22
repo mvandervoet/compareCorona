@@ -96,7 +96,7 @@ server <- function(input, output, session) {
   
   observeEvent(input$goCompare, {
     showNotification(
-      "I'm working on your query! This will take a few seconds.",
+      "I'm working on your query!",
       duration = 2,
       type = "message"
     )
