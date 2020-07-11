@@ -120,7 +120,7 @@ ui <- fluidPage(
     ),
     
     # Checkboxes
-    selectInput("metric", "Corona metric (deaths or cases)", c("deaths", "cases"), selected = "deaths", multiple = FALSE,
+    selectInput("metric", "Corona metric (deaths or cases)", c("deaths", "cases"), selected = "cases", multiple = FALSE,
                 selectize = TRUE, width = "30%", size = NULL),
     
     # checkboxInput("daily",

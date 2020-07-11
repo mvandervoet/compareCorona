@@ -170,8 +170,11 @@ server <- function(input, output, session) {
         )
       
       # Load the full dataset
-      data <- readxl::read_excel(tf) %>%
-        mutate(dateRep = (dateRep - lubridate::days(1))) # correct for a one-day delay in reporting
+      data <- readxl::read_excel(tf)
+      data$dateRep <- as.POSIXct(data$dateRep)
+        
+        
+      data <- data %>% mutate(dateRep = (dateRep - lubridate::days(1))) # correct for a one-day delay in reporting
       names(data)[names(data) == "countriesAndTerritories"] <-
         "Country"
       
